@@ -1,0 +1,273 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fff7fb;
+  --foreground: #1f1720;
+  --pink-main: #ec4899;
+  --pink-dark: #db2777;
+  --pink-soft: #fdf2f8;
+  --pink-border: #fbcfe8;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(244, 114, 182, 0.18),
+      transparent 32rem
+    ),
+    linear-gradient(135deg, #fff7fb 0%, #ffffff 45%, #fdf2f8 100%);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+input,
+select,
+textarea,
+button {
+  outline: none;
+}
+
+::selection {
+  background: #f9a8d4;
+  color: #831843;
+}
+
+/* =========================
+   THEME PINK PUTIH
+   ========================= */
+
+.pink-card {
+  border: 1px solid var(--pink-border);
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(244, 114, 182, 0.12);
+}
+
+.pink-soft-bg {
+  background: linear-gradient(135deg, #fff1f8, #ffffff);
+}
+
+.pink-button {
+  background: var(--pink-main);
+  color: #ffffff;
+}
+
+.pink-button:hover {
+  background: var(--pink-dark);
+}
+
+.pink-input {
+  border: 1px solid var(--pink-border);
+  background: rgba(253, 242, 248, 0.45);
+}
+
+.pink-input:focus {
+  border-color: var(--pink-main);
+  background: #ffffff;
+}
+
+/* =========================
+   PRINT GLOBAL AMAN
+   Tidak ada @page global.
+   Tidak ada width 58mm untuk html/body.
+   Jadi laporan A4 tidak ikut rusak.
+   ========================= */
+
+@media print {
+  .no-print,
+  .print-hidden {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+}
+
+/* =========================
+   RECEIPT THERMAL 58MM
+   Style tampilan nota.
+   Catatan:
+   Ukuran kertas 58mm saat print sebaiknya
+   diatur khusus di halaman nota, bukan global.
+   ========================= */
+
+.receipt-page {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.receipt-print {
+  width: 58mm;
+  max-width: 58mm;
+  overflow: hidden;
+}
+
+.receipt-inner {
+  box-sizing: border-box;
+  width: 58mm;
+  padding: 3mm;
+  font-size: 10px;
+  line-height: 1.25;
+  color: #000000;
+  background: #ffffff;
+}
+
+.receipt-center {
+  text-align: center;
+}
+
+.receipt-store-name {
+  margin: 0 0 2px 0;
+  font-size: 13px;
+  line-height: 1.15;
+  font-weight: 700;
+  word-break: break-word;
+}
+
+.receipt-small {
+  margin: 0;
+  font-size: 9px;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.receipt-line {
+  margin: 5px 0;
+  border-top: 1px dashed #000000;
+}
+
+.receipt-info,
+.receipt-total,
+.receipt-items {
+  width: 100%;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  width: 100%;
+}
+
+.receipt-row span:first-child {
+  flex: 1;
+  text-align: left;
+}
+
+.receipt-row span:last-child {
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.receipt-item {
+  margin-bottom: 5px;
+}
+
+.receipt-product-name {
+  margin: 0 0 2px 0;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.receipt-semibold {
+  font-weight: 600;
+}
+
+.receipt-grand-total {
+  margin-top: 4px;
+  padding-top: 3px;
+  border-top: 1px dashed #000000;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.receipt-footer {
+  font-size: 9px;
+  line-height: 1.25;
+  word-break: break-word;
+}
+
+.receipt-bottom-space {
+  height: 4mm;
+}
+
+/* =========================
+   PRINT KHUSUS NOTA
+   Hanya elemen receipt yang diatur.
+   Tidak mengubah html/body menjadi 58mm.
+   ========================= */
+
+@media print {
+  .receipt-page {
+    width: 58mm !important;
+    min-width: 58mm !important;
+    max-width: 58mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    overflow: visible !important;
+  }
+
+  .receipt-print {
+    width: 58mm !important;
+    min-width: 58mm !important;
+    max-width: 58mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    overflow: visible !important;
+  }
+
+  .receipt-inner {
+    box-sizing: border-box !important;
+    width: 58mm !important;
+    min-width: 58mm !important;
+    max-width: 58mm !important;
+    margin: 0 !important;
+    padding: 2mm !important;
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+    color: #000000 !important;
+    background: #ffffff !important;
+    overflow: visible !important;
+  }
+
+  .receipt-store-name {
+    font-size: 12px !important;
+    line-height: 1.15 !important;
+  }
+
+  .receipt-small {
+    font-size: 8.5px !important;
+    line-height: 1.15 !important;
+  }
+
+  .receipt-line {
+    margin: 4px 0 !important;
+  }
+
+  .receipt-item {
+    margin-bottom: 4px !important;
+  }
+
+  .receipt-footer {
+    font-size: 8.5px !important;
+    line-height: 1.2 !important;
+  }
+
+  .receipt-bottom-space {
+    height: 2mm !important;
+  }
+}

@@ -1,0 +1,166 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum Role {
+  ADMIN
+  KASIR
+}
+
+enum PaymentMethod {
+  CASH
+  TRANSFER
+  QRIS
+  DEBIT
+  CREDIT
+}
+
+enum StockMutationType {
+  IN
+  OUT
+  SALE
+  RETURN
+  ADJUSTMENT
+  OPNAME
+  DAMAGED
+  LOST
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  username  String   @unique
+  password  String
+  role      Role     @default(KASIR)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sales Sale[]
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  parentId  Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  parent   Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  children Category[] @relation("CategoryHierarchy")
+
+  products    Product[] @relation("ProductCategory")
+  subProducts Product[] @relation("ProductSubCategory")
+
+  @@index([parentId])
+}
+
+model Product {
+  id            Int       @id @default(autoincrement())
+  code          String    @unique
+  name          String
+  brand         String?
+  imageUrl      String?
+  categoryId    Int
+  subCategoryId Int?
+  purchasePrice Int       @default(0)
+  sellingPrice  Int       @default(0)
+  stock         Int       @default(0)
+  minStock      Int       @default(0)
+  batchNumber   String?
+  expiredDate   DateTime?
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  category       Category  @relation("ProductCategory", fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  subCategory    Category? @relation("ProductSubCategory", fields: [subCategoryId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  saleItems      SaleItem[]
+  stockMutations StockMutation[]
+
+  @@index([categoryId])
+  @@index([subCategoryId])
+  @@index([name])
+  @@index([expiredDate])
+}
+
+model Sale {
+  id                     Int           @id @default(autoincrement())
+  invoiceNumber          String        @unique
+  userId                 Int?
+  customerName           String?
+  subtotalBeforeDiscount Int           @default(0)
+  itemDiscountTotal      Int           @default(0)
+  transactionDiscount    Int           @default(0)
+  grandTotal             Int           @default(0)
+  paid                   Int           @default(0)
+  change                 Int           @default(0)
+  paymentMethod          PaymentMethod @default(CASH)
+  note                   String?       @db.Text
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+
+  user  User?      @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  items SaleItem[]
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model SaleItem {
+  id            Int      @id @default(autoincrement())
+  saleId        Int
+  productId     Int
+  productCode   String
+  productName   String
+  quantity      Int      @default(1)
+  purchasePrice Int      @default(0)
+  price         Int      @default(0)
+  itemDiscount  Int      @default(0)
+  totalDiscount Int      @default(0)
+  subtotal      Int      @default(0)
+  profit        Int      @default(0)
+  createdAt     DateTime @default(now())
+
+  sale    Sale    @relation(fields: [saleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([saleId])
+  @@index([productId])
+  @@index([createdAt])
+}
+
+model StockMutation {
+  id          Int               @id @default(autoincrement())
+  productId   Int
+  type        StockMutationType
+  quantity    Int
+  beforeStock Int               @default(0)
+  afterStock  Int               @default(0)
+  reference   String?
+  reason      String?
+  note        String?           @db.Text
+  createdAt   DateTime          @default(now())
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([productId])
+  @@index([type])
+  @@index([createdAt])
+}
+
+model StoreSetting {
+  id          Int      @id @default(1)
+  storeName   String   @default("Skincare Store")
+  address     String?
+  phone       String?
+  receiptNote String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
