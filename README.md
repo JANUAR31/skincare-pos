@@ -27,16 +27,3 @@ Sistem kasir toko skincare final lengkap berbasis Next.js, TypeScript, Prisma 7,
 - Produk expired
 - Pengaturan nama toko dan catatan nota
 
-## Akun awal
-
-Admin: admin / admin123
-Kasir: kasir / kasir123
-
-## Cara menjalankan
-
-1. Jalankan `npm.cmd install`
-2. Copy `.env.example` menjadi `.env`
-3. Import `skincare_pos_complete_final.sql` lewat phpMyAdmin
-4. Jalankan `npx.cmd prisma generate`
-5. Jalankan `npm.cmd run dev`
-6. Buka `http://localhost:3000`
